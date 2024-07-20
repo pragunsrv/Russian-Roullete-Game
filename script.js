@@ -15,6 +15,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const playersDeadDisplay = document.getElementById("playersDead");
     const bulletCountInput = document.getElementById("bulletCount");
     const applySettingsButton = document.getElementById("applySettings");
+    const chamberCountInput = document.getElementById("chamberCount");
+    const applyChamberSettingsButton = document.getElementById("applyChamberSettings");
     const leaderboardList = document.getElementById("leaderboardList");
     const soundToggle = document.getElementById("soundToggle");
     const achievementsList = document.getElementById("achievementsList");
@@ -34,17 +36,21 @@ document.addEventListener("DOMContentLoaded", function() {
     let achievements = [];
     let soundEnabled = false;
     let chatLog = [];
+    let chamberCount = 6;
 
     function updateStatus() {
         chamberPositionDisplay.textContent = chamberPosition;
         bulletPositionsDisplay.textContent = bulletPositions.join(', ');
         currentPlayerDisplay.textContent = players.length > 0 ? players[currentPlayerIndex] : "None";
+        roundsPlayedDisplay.textContent = roundsPlayed;
+        playersSafeDisplay.textContent = playersSafe;
+        playersDeadDisplay.textContent = playersDead;
     }
 
     function updateHistory() {
         historyList.innerHTML = '';
         gameHistory.forEach(entry => {
-            const li = document.createElement('li');
+            const li = document.createElement("li");
             li.textContent = entry;
             historyList.appendChild(li);
         });
@@ -52,170 +58,141 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function updateLeaderboard() {
         leaderboardList.innerHTML = '';
-        Object.keys(leaderboard).forEach(player => {
-            const li = document.createElement('li');
-            li.textContent = `${player}: ${leaderboard[player]} safe rounds`;
+        for (const [player, score] of Object.entries(leaderboard)) {
+            const li = document.createElement("li");
+            li.textContent = `${player}: ${score}`;
             leaderboardList.appendChild(li);
-        });
+        }
     }
 
     function updateAchievements() {
         achievementsList.innerHTML = '';
         achievements.forEach(achievement => {
-            const li = document.createElement('li');
+            const li = document.createElement("li");
             li.textContent = achievement;
             achievementsList.appendChild(li);
         });
     }
 
-    function updateChat() {
-        chatMessages.innerHTML = '';
-        chatLog.forEach(message => {
-            const li = document.createElement('li');
-            li.textContent = message;
-            chatMessages.appendChild(li);
-        });
-    }
-
-    function playSound(type) {
-        const audio = new Audio();
-        switch (type) {
-            case 'spin':
-                audio.src = 'sounds/spin.mp3';
-                break;
-            case 'bang':
-                audio.src = 'sounds/bang.mp3';
-                break;
-            case 'click':
-                audio.src = 'sounds/click.mp3';
-                break;
+    function playSound(effect) {
+        if (soundEnabled) {
+            const audio = new Audio(`sounds/${effect}.mp3`);
+            audio.play();
         }
-        audio.play();
     }
 
     function spinChamber() {
-        chamberPosition = Math.floor(Math.random() * 6);
-        bulletPositions.forEach((pos, index) => {
-            if (chamberPosition === pos) {
-                bulletPositions.splice(index, 1);
-            }
-        });
-        if (soundEnabled) playSound('spin');
+        chamberPosition = Math.floor(Math.random() * chamberCount);
+        bulletPositions = [];
+        for (let i = 0; i < bulletCountInput.value; i++) {
+            let pos;
+            do {
+                pos = Math.floor(Math.random() * chamberCount);
+            } while (bulletPositions.includes(pos));
+            bulletPositions.push(pos);
+        }
         updateStatus();
-        gameHistory.push(`Chamber spun to position ${chamberPosition}.`);
+        gameHistory.push(`Chamber spun to position ${chamberPosition}. Bullets at ${bulletPositions.join(', ')}.`);
         updateHistory();
+        playSound('spin');
     }
 
     function pullTrigger() {
-        if (bulletPositions.includes(chamberPosition)) {
-            message.textContent = `Bang! ${players[currentPlayerIndex]} is dead!`;
+        const isBullet = bulletPositions.includes(chamberPosition);
+        if (isBullet) {
+            gameHistory.push(`${players[currentPlayerIndex]} lost!`);
             playersDead++;
-            if (soundEnabled) playSound('bang');
+            playSound('click');
         } else {
-            message.textContent = `Click. ${players[currentPlayerIndex]} is safe.`;
+            gameHistory.push(`${players[currentPlayerIndex]} survived!`);
             playersSafe++;
-            if (soundEnabled) playSound('click');
+            playSound('safe');
         }
-        chamberPosition = (chamberPosition + 1) % 6;
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+
         roundsPlayed++;
         updateStatus();
-        updateStatistics();
-    }
-
-    function updateStatistics() {
-        roundsPlayedDisplay.textContent = roundsPlayed;
-        playersSafeDisplay.textContent = playersSafe;
-        playersDeadDisplay.textContent = playersDead;
-    }
-
-    function resetGame() {
-        chamberPosition = 0;
-        bulletPositions = [];
-        gameHistory = [];
-        players = [];
-        currentPlayerIndex = 0;
-        roundsPlayed = 0;
-        playersSafe = 0;
-        playersDead = 0;
-        leaderboard = {};
-        achievements = [];
-        chatLog = [];
-        message.textContent = '';
-        updateStatus();
         updateHistory();
-        updateLeaderboard();
-        updateAchievements();
-        updateChat();
-        updateStatistics();
-    }
-
-    function addPlayer() {
-        const playerName = prompt("Enter player name:");
-        if (playerName) {
-            players.push(playerName);
-            const li = document.createElement('li');
-            li.textContent = playerName;
-            playerList.appendChild(li);
-            leaderboard[playerName] = 0;
-            updateStatus();
-        }
-    }
-
-    function removePlayer() {
-        const playerName = prompt("Enter player name to remove:");
-        if (playerName && players.includes(playerName)) {
-            players = players.filter(player => player !== playerName);
-            playerList.innerHTML = '';
-            players.forEach(player => {
-                const li = document.createElement('li');
-                li.textContent = player;
-                playerList.appendChild(li);
-            });
-            delete leaderboard[playerName];
-            updateStatus();
-        }
-    }
-
-    function applySettings() {
-        const bulletCount = parseInt(bulletCountInput.value);
-        if (bulletCount > 0 && bulletCount <= 6) {
-            bulletPositions = [];
-            while (bulletPositions.length < bulletCount) {
-                const position = Math.floor(Math.random() * 6);
-                if (!bulletPositions.includes(position)) {
-                    bulletPositions.push(position);
-                }
+        if (players.length > 0) {
+            currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+            if (playersDead === players.length) {
+                gameHistory.push('Game over! All players are dead.');
+                updateHistory();
             }
-            message.textContent = "Settings applied.";
-            updateStatus();
-        } else {
-            message.textContent = "Invalid bullet count.";
-        }
-    }
-
-    function toggleSound() {
-        soundEnabled = soundToggle.checked;
-        message.textContent = soundEnabled ? "Sound enabled." : "Sound disabled.";
-    }
-
-    function sendMessage() {
-        const text = chatBox.value.trim();
-        if (text) {
-            chatLog.push(`${players[currentPlayerIndex]}: ${text}`);
-            chatBox.value = '';
-            updateChat();
         }
     }
 
     spinChamberButton.addEventListener("click", spinChamber);
     pullTriggerButton.addEventListener("click", pullTrigger);
-    resetGameButton.addEventListener("click", resetGame);
-    addPlayerButton.addEventListener("click", addPlayer);
-    removePlayerButton.addEventListener("click", removePlayer);
-    applySettingsButton.addEventListener("click", applySettings);
-    soundToggle.addEventListener("change", toggleSound);
-    sendMessageButton.addEventListener("click", sendMessage);
 
-    resetGame();
+    applySettingsButton.addEventListener("click", () => {
+        bulletCount = parseInt(bulletCountInput.value);
+        spinChamber();
+    });
+
+    applyChamberSettingsButton.addEventListener("click", () => {
+        chamberCount = parseInt(chamberCountInput.value);
+        spinChamber();
+    });
+
+    resetGameButton.addEventListener("click", () => {
+        chamberPosition = 0;
+        bulletPositions = [];
+        players = [];
+        currentPlayerIndex = 0;
+        roundsPlayed = 0;
+        playersSafe = 0;
+        playersDead = 0;
+        gameHistory = [];
+        leaderboard = {};
+        achievements = [];
+        chatLog = [];
+        updateStatus();
+        updateHistory();
+        updateLeaderboard();
+        updateAchievements();
+        chatMessages.innerHTML = '';
+        playSound('reset');
+    });
+
+    addPlayerButton.addEventListener("click", () => {
+        const playerName = prompt("Enter player name:");
+        if (playerName) {
+            players.push(playerName);
+            leaderboard[playerName] = 0;
+            updateStatus();
+            updateLeaderboard();
+        }
+    });
+
+    removePlayerButton.addEventListener("click", () => {
+        const playerName = prompt("Enter player name to remove:");
+        const index = players.indexOf(playerName);
+        if (index > -1) {
+            players.splice(index, 1);
+            delete leaderboard[playerName];
+            updateStatus();
+            updateLeaderboard();
+        }
+    });
+
+    sendMessageButton.addEventListener("click", () => {
+        const messageText = chatBox.value.trim();
+        if (messageText) {
+            chatLog.push(messageText);
+            const li = document.createElement("li");
+            li.textContent = messageText;
+            chatMessages.appendChild(li);
+            chatBox.value = '';
+            playSound('message');
+        }
+    });
+
+    soundToggle.addEventListener("change", () => {
+        soundEnabled = soundToggle.checked;
+    });
+
+    function addAchievement(achievement) {
+        achievements.push(achievement);
+        updateAchievements();
+    }
 });

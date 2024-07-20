@@ -1,7 +1,8 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    background-color: #f4f4f4;
+    background-color: #1e1e1e; /* Dark Grey */
+    color: #e0e0e0; /* Light Grey for text */
     margin: 0;
     padding: 0;
 }
@@ -10,61 +11,13 @@ body {
     max-width: 1000px;
     margin: 50px auto;
     padding: 20px;
-    border: 1px solid #ddd;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #333; /* Dark Grey */
+    background-color: #2c2c2c; /* Darker Grey */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
-header {
-    margin-bottom: 20px;
-}
-
-h1 {
-    font-size: 2.5em;
-}
-
-section {
-    margin-top: 20px;
-}
-
-section h2 {
-    font-size: 1.5em;
-    margin-bottom: 10px;
-}
-
-button {
-    padding: 10px 20px;
-    margin: 10px;
-    font-size: 1em;
-    cursor: pointer;
-}
-
-#message {
-    font-size: 1.2em;
-    margin-top: 20px;
-    color: #d9534f; /* Red color for error messages */
-}
-
-#status, #game-history, #game-multiplayer, #game-statistics, #game-settings, #game-leaderboard, #sound-settings, #game-achievements, #player-chat {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 15px;
-}
-
-#status p, #game-history ul, #game-multiplayer ul, #game-statistics p, #game-settings, #game-leaderboard ul, #sound-settings, #game-achievements ul, #player-chat {
-    margin: 0;
-}
-
-#historyList, #playerList, #leaderboardList, #achievementsList, #chatMessages {
-    list-style-type: none;
-    padding: 0;
-}
-
-#historyList li, #playerList li, #leaderboardList li, #achievementsList li, #chatMessages li {
-    margin: 5px 0;
-    padding: 5px;
-    border: 1px solid #ddd;
+h1, h2 {
+    color: #c81d25; /* Dark Red */
 }
 
 .gun-container {
@@ -72,20 +25,104 @@ button {
 }
 
 .gun {
-    width: 100px;
-    height: 100px;
-    background-color: #333;
+    width: 120px;
+    height: 120px;
+    background-color: #333; /* Dark Grey */
     border-radius: 50%;
     position: relative;
     margin: 0 auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .chamber {
-    width: 40px;
-    height: 40px;
-    background-color: #555;
+    width: 50px;
+    height: 50px;
+    background-color: #444; /* Slightly lighter Dark Grey */
     border-radius: 50%;
     position: absolute;
-    top: 30px;
-    left: 30px;
+    top: 35px;
+    left: 35px;
+}
+
+button {
+    padding: 12px 24px;
+    margin: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #c81d25; /* Dark Red */
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #a00d1e; /* Darker Red */
+}
+
+#message {
+    font-size: 1.2em;
+    margin-top: 20px;
+    color: #c81d25; /* Dark Red */
+}
+
+#status, #settings, #multiplayer, #history, #statistics, #sound, #achievements, #chat, #leaderboard {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #444; /* Dark Grey */
+    border-radius: 5px;
+    background-color: #333; /* Dark Grey */
+}
+
+#status span, #statistics span {
+    font-weight: bold;
+}
+
+#settings input, #settings button {
+    margin: 10px;
+}
+
+#playerList, #historyList, #leaderboardList, #achievementsList, #chatMessages {
+    list-style-type: none;
+    padding: 0;
+}
+
+#playerList li, #historyList li, #leaderboardList li, #achievementsList li, #chatMessages li {
+    margin: 5px 0;
+    padding: 10px;
+    border: 1px solid #444; /* Dark Grey */
+    background-color: #2c2c2c; /* Darker Grey */
+    border-radius: 5px;
+}
+
+#chatBox {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #444; /* Dark Grey */
+    border-radius: 5px;
+    background-color: #333; /* Dark Grey */
+    color: #e0e0e0; /* Light Grey */
+}
+
+#sound input {
+    margin: 10px;
+}
+
+#leaderboard {
+    margin-top: 20px;
+}
+
+#leaderboard h2 {
+    font-size: 1.5em;
+}
+
+textarea, input[type="number"] {
+    background-color: #2c2c2c; /* Darker Grey */
+    color: #e0e0e0; /* Light Grey */
+    border: 1px solid #444; /* Dark Grey */
+}
+
+input[type="number"] {
+    width: 60px;
 }
