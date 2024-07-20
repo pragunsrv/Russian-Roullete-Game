@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const pullTriggerButton = document.getElementById("pullTrigger");
     const message = document.getElementById("message");
     const chamberPositionDisplay = document.getElementById("chamberPosition");
-    const bulletPositionDisplay = document.getElementById("bulletPosition");
+    const bulletPositionsDisplay = document.getElementById("bulletPositions");
     const historyList = document.getElementById("historyList");
     const resetGameButton = document.getElementById("resetGame");
     const addPlayerButton = document.getElementById("addPlayer");
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const leaderboardList = document.getElementById("leaderboardList");
 
     let chamberPosition = 0;
-    let bulletPositions = [Math.floor(Math.random() * 6)];
+    let bulletPositions = [];
     let gameHistory = [];
     let players = [];
     let currentPlayerIndex = 0;
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function updateStatus() {
         chamberPositionDisplay.textContent = chamberPosition;
-        bulletPositionDisplay.textContent = bulletPositions.join(', ');
+        bulletPositionsDisplay.textContent = bulletPositions.join(', ');
         currentPlayerDisplay.textContent = players.length > 0 ? players[currentPlayerIndex] : "None";
     }
 
@@ -81,9 +81,9 @@ document.addEventListener("DOMContentLoaded", function() {
             }
             leaderboard[players[currentPlayerIndex]]++;
         }
-        chamberPosition = (chamberPosition + 1) % 6;
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
         roundsPlayed++;
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+        spinChamber(); // Spin the chamber for the next round
         updateStatus();
         updateHistory();
         updateStatistics();
@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function resetGame() {
         chamberPosition = 0;
-        bulletPositions = [Math.floor(Math.random() * 6)];
+        bulletPositions = [];
         gameHistory = [];
         players = [];
         currentPlayerIndex = 0;
