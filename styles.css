@@ -7,7 +7,7 @@ body {
 }
 
 .container {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 50px auto;
     padding: 20px;
     border: 1px solid #ddd;
@@ -15,9 +15,56 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+header {
+    margin-bottom: 20px;
+}
+
 h1 {
     font-size: 2.5em;
-    margin-bottom: 20px;
+}
+
+section {
+    margin-top: 20px;
+}
+
+section h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+#message {
+    font-size: 1.2em;
+    margin-top: 20px;
+    color: #d9534f; /* Red color for error messages */
+}
+
+#status, #game-history, #game-multiplayer, #game-statistics, #game-settings, #game-leaderboard, #sound-settings, #game-achievements, #player-chat {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+#status p, #game-history ul, #game-multiplayer ul, #game-statistics p, #game-settings, #game-leaderboard ul, #sound-settings, #game-achievements ul, #player-chat {
+    margin: 0;
+}
+
+#historyList, #playerList, #leaderboardList, #achievementsList, #chatMessages {
+    list-style-type: none;
+    padding: 0;
+}
+
+#historyList li, #playerList li, #leaderboardList li, #achievementsList li, #chatMessages li {
+    margin: 5px 0;
+    padding: 5px;
+    border: 1px solid #ddd;
 }
 
 .gun-container {
@@ -42,160 +89,3 @@ h1 {
     top: 30px;
     left: 30px;
 }
-
-button {
-    padding: 10px 20px;
-    margin: 10px;
-    font-size: 1em;
-    cursor: pointer;
-}
-
-#message {
-    font-size: 1.2em;
-    margin-top: 20px;
-    color: #d9534f; /* Red color for error messages */
-}
-
-#status {
-    margin-top: 20px;
-    font-size: 1.1em;
-}
-
-#status span {
-    font-weight: bold;
-}
-
-#history {
-    margin-top: 20px;
-}
-
-#history h2 {
-    font-size: 1.5em;
-}
-
-#historyList {
-    list-style-type: none;
-    padding: 0;
-}
-
-#historyList li {
-    margin: 5px 0;
-    padding: 5px;
-    border: 1px solid #ddd;
-}
-
-#multiplayer {
-    margin-top: 20px;
-}
-
-#multiplayer h2 {
-    font-size: 1.5em;
-}
-
-#playerList {
-    list-style-type: none;
-    padding: 0;
-}
-
-#playerList li {
-    margin: 5px 0;
-    padding: 5px;
-    border: 1px solid #ddd;
-}
-
-#statistics {
-    margin-top: 20px;
-}
-
-#statistics h2 {
-    font-size: 1.5em;
-}
-
-#statistics p {
-    font-size: 1.1em;
-}
-
-#statistics span {
-    font-weight: bold;
-}
-
-#settings {
-    margin-top: 20px;
-}
-
-#settings h2 {
-    font-size: 1.5em;
-}
-
-#leaderboard {
-    margin-top: 20px;
-}
-
-#leaderboard h2 {
-    font-size: 1.5em;
-}
-
-#leaderboardList {
-    list-style-type: none;
-    padding: 0;
-}
-
-#leaderboardList li {
-    margin: 5px 0;
-    padding: 5px;
-    border: 1px solid #ddd;
-}
-
-#sound {
-    margin-top: 20px;
-}
-
-#sound h2 {
-    font-size: 1.5em;
-}
-
-#achievements {
-    margin-top: 20px;
-}
-
-#achievements h2 {
-    font-size: 1.5em;
-}
-
-#achievementsList {
-    list-style-type: none;
-    padding: 0;
-}
-
-#achievementsList li {
-    margin: 5px 0;
-    padding: 5px;
-    border: 1px solid #ddd;
-}
-
-#chat {
-    margin-top: 20px;
-}
-
-#chat h2 {
-    font-size: 1.5em;
-}
-
-#chatBox {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-}
-
-#chatMessages {
-    list-style-type: none;
-    padding: 0;
-    margin-top: 10px;
-}
-
-#chatMessages li {
-    margin: 5px 0;
-    padding: 5px;
-    border: 1px solid #ddd;
-}
-    

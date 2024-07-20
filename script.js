@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function updateStatus() {
         chamberPositionDisplay.textContent = chamberPosition;
-        bulletPositionDisplay.textContent = bulletPositions.join(', ');
+        bulletPositionsDisplay.textContent = bulletPositions.join(', ');
         currentPlayerDisplay.textContent = players.length > 0 ? players[currentPlayerIndex] : "None";
     }
 
@@ -103,6 +103,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (soundEnabled) playSound('spin');
         updateStatus();
         gameHistory.push(`Chamber spun to position ${chamberPosition}.`);
+        updateHistory();
     }
 
     function pullTrigger() {
@@ -119,6 +120,13 @@ document.addEventListener("DOMContentLoaded", function() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
         roundsPlayed++;
         updateStatus();
+        updateStatistics();
+    }
+
+    function updateStatistics() {
+        roundsPlayedDisplay.textContent = roundsPlayed;
+        playersSafeDisplay.textContent = playersSafe;
+        playersDeadDisplay.textContent = playersDead;
     }
 
     function resetGame() {
@@ -135,6 +143,11 @@ document.addEventListener("DOMContentLoaded", function() {
         chatLog = [];
         message.textContent = '';
         updateStatus();
+        updateHistory();
+        updateLeaderboard();
+        updateAchievements();
+        updateChat();
+        updateStatistics();
     }
 
     function addPlayer() {
