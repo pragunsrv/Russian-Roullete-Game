@@ -82,3 +82,38 @@ button {
     padding: 5px;
     border: 1px solid #ddd;
 }
+
+#multiplayer {
+    margin-top: 20px;
+}
+
+#multiplayer h2 {
+    font-size: 1.5em;
+}
+
+#playerList {
+    list-style-type: none;
+    padding: 0;
+}
+
+#playerList li {
+    margin: 5px 0;
+    padding: 5px;
+    border: 1px solid #ddd;
+}
+
+#statistics {
+    margin-top: 20px;
+}
+
+#statistics h2 {
+    font-size: 1.5em;
+}
+
+#statistics p {
+    font-size: 1.1em;
+}
+
+#statistics span {
+    font-weight: bold;
+}
