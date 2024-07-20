@@ -16,6 +16,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const bulletCountInput = document.getElementById("bulletCount");
     const applySettingsButton = document.getElementById("applySettings");
     const leaderboardList = document.getElementById("leaderboardList");
+    const soundToggle = document.getElementById("soundToggle");
+    const achievementsList = document.getElementById("achievementsList");
+    const chatBox = document.getElementById("chatBox");
+    const sendMessageButton = document.getElementById("sendMessage");
+    const chatMessages = document.getElementById("chatMessages");
 
     let chamberPosition = 0;
     let bulletPositions = [Math.floor(Math.random() * 6)];
@@ -26,68 +31,101 @@ document.addEventListener("DOMContentLoaded", function() {
     let playersSafe = 0;
     let playersDead = 0;
     let leaderboard = {};
+    let achievements = [];
+    let soundEnabled = false;
+    let chatLog = [];
 
     function updateStatus() {
         chamberPositionDisplay.textContent = chamberPosition;
-        bulletPositionDisplay.textContent = bulletPositions.join(', ');
-        currentPlayerDisplay.textContent = players.length > 0 ? players[currentPlayerIndex] : "None";
+        bulletPositionDisplay.textContent = bulletPositions.join(", ");
+        currentPlayerDisplay.textContent = players[currentPlayerIndex] || "None";
+        roundsPlayedDisplay.textContent = roundsPlayed;
+        playersSafeDisplay.textContent = playersSafe;
+        playersDeadDisplay.textContent = playersDead;
+        updateHistory();
+        updateLeaderboard();
+        updateAchievements();
+        updateChat();
     }
 
     function updateHistory() {
         historyList.innerHTML = '';
-        gameHistory.forEach((event, index) => {
+        gameHistory.forEach(entry => {
             const li = document.createElement('li');
-            li.textContent = `Round ${index + 1}: ${event}`;
+            li.textContent = entry;
             historyList.appendChild(li);
         });
     }
 
-    function updateStatistics() {
-        roundsPlayedDisplay.textContent = roundsPlayed;
-        playersSafeDisplay.textContent = playersSafe;
-        playersDeadDisplay.textContent = playersDead;
-    }
-
     function updateLeaderboard() {
         leaderboardList.innerHTML = '';
-        const sortedPlayers = Object.keys(leaderboard).sort((a, b) => leaderboard[b] - leaderboard[a]);
-        sortedPlayers.forEach(player => {
+        Object.keys(leaderboard).forEach(player => {
             const li = document.createElement('li');
             li.textContent = `${player}: ${leaderboard[player]} safe rounds`;
             leaderboardList.appendChild(li);
         });
     }
 
+    function updateAchievements() {
+        achievementsList.innerHTML = '';
+        achievements.forEach(achievement => {
+            const li = document.createElement('li');
+            li.textContent = achievement;
+            achievementsList.appendChild(li);
+        });
+    }
+
+    function updateChat() {
+        chatMessages.innerHTML = '';
+        chatLog.forEach(message => {
+            const li = document.createElement('li');
+            li.textContent = message;
+            chatMessages.appendChild(li);
+        });
+    }
+
+    function playSound(type) {
+        const audio = new Audio();
+        switch (type) {
+            case 'spin':
+                audio.src = 'sounds/spin.mp3';
+                break;
+            case 'bang':
+                audio.src = 'sounds/bang.mp3';
+                break;
+            case 'click':
+                audio.src = 'sounds/click.mp3';
+                break;
+        }
+        audio.play();
+    }
+
     function spinChamber() {
         chamberPosition = Math.floor(Math.random() * 6);
-        message.textContent = "Chamber is spun.";
+        bulletPositions.forEach((pos, index) => {
+            if (chamberPosition === pos) {
+                bulletPositions.splice(index, 1);
+            }
+        });
+        if (soundEnabled) playSound('spin');
         updateStatus();
+        gameHistory.push(`Chamber spun to position ${chamberPosition}.`);
     }
 
     function pullTrigger() {
         if (bulletPositions.includes(chamberPosition)) {
-            message.textContent = `Bang! Player ${players[currentPlayerIndex]} is dead!`;
-            gameHistory.push(`Bang! Player ${players[currentPlayerIndex]} is dead.`);
+            message.textContent = `Bang! ${players[currentPlayerIndex]} is dead!`;
             playersDead++;
-            if (leaderboard[players[currentPlayerIndex]]) {
-                delete leaderboard[players[currentPlayerIndex]];
-            }
+            if (soundEnabled) playSound('bang');
         } else {
-            message.textContent = `Click. Player ${players[currentPlayerIndex]} is safe.`;
-            gameHistory.push(`Click. Player ${players[currentPlayerIndex]} is safe.`);
+            message.textContent = `Click. ${players[currentPlayerIndex]} is safe.`;
             playersSafe++;
-            if (!leaderboard[players[currentPlayerIndex]]) {
-                leaderboard[players[currentPlayerIndex]] = 0;
-            }
-            leaderboard[players[currentPlayerIndex]]++;
+            if (soundEnabled) playSound('click');
         }
-        chamberPosition = (chamberPosition + 1) % 6;
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
         roundsPlayed++;
+        gameHistory.push(`Round ${roundsPlayed}: ${players[currentPlayerIndex]} pulled the trigger.`);
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
         updateStatus();
-        updateHistory();
-        updateStatistics();
-        updateLeaderboard();
     }
 
     function resetGame() {
@@ -100,11 +138,10 @@ document.addEventListener("DOMContentLoaded", function() {
         playersSafe = 0;
         playersDead = 0;
         leaderboard = {};
+        achievements = [];
+        chatLog = [];
         message.textContent = '';
         updateStatus();
-        updateHistory();
-        updateStatistics();
-        updateLeaderboard();
     }
 
     function addPlayer() {
@@ -114,6 +151,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const li = document.createElement('li');
             li.textContent = playerName;
             playerList.appendChild(li);
+            leaderboard[playerName] = 0;
             updateStatus();
         }
     }
@@ -128,6 +166,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 li.textContent = player;
                 playerList.appendChild(li);
             });
+            delete leaderboard[playerName];
             updateStatus();
         }
     }
@@ -149,12 +188,28 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    function toggleSound() {
+        soundEnabled = soundToggle.checked;
+        message.textContent = soundEnabled ? "Sound enabled." : "Sound disabled.";
+    }
+
+    function sendMessage() {
+        const text = chatBox.value.trim();
+        if (text) {
+            chatLog.push(`${players[currentPlayerIndex]}: ${text}`);
+            chatBox.value = '';
+            updateChat();
+        }
+    }
+
     spinChamberButton.addEventListener("click", spinChamber);
     pullTriggerButton.addEventListener("click", pullTrigger);
     resetGameButton.addEventListener("click", resetGame);
     addPlayerButton.addEventListener("click", addPlayer);
     removePlayerButton.addEventListener("click", removePlayer);
     applySettingsButton.addEventListener("click", applySettings);
+    soundToggle.addEventListener("change", toggleSound);
+    sendMessageButton.addEventListener("click", sendMessage);
 
     resetGame();
 });
