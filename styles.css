@@ -54,3 +54,31 @@ button {
     font-size: 1.2em;
     margin-top: 20px;
 }
+
+#status {
+    margin-top: 20px;
+    font-size: 1.1em;
+}
+
+#status span {
+    font-weight: bold;
+}
+
+#history {
+    margin-top: 20px;
+}
+
+#history h2 {
+    font-size: 1.5em;
+}
+
+#historyList {
+    list-style-type: none;
+    padding: 0;
+}
+
+#historyList li {
+    margin: 5px 0;
+    padding: 5px;
+    border: 1px solid #ddd;
+}
