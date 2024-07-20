@@ -39,6 +39,16 @@
             <p>Players Safe: <span id="playersSafe">0</span></p>
             <p>Players Dead: <span id="playersDead">0</span></p>
         </div>
+        <div id="settings">
+            <h2>Game Settings</h2>
+            <label for="bulletCount">Number of Bullets: </label>
+            <input type="number" id="bulletCount" min="1" max="6" value="1">
+            <button id="applySettings">Apply Settings</button>
+        </div>
+        <div id="leaderboard">
+            <h2>Leaderboard</h2>
+            <ul id="leaderboardList"></ul>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>

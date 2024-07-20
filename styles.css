@@ -117,3 +117,30 @@ button {
 #statistics span {
     font-weight: bold;
 }
+
+#settings {
+    margin-top: 20px;
+}
+
+#settings h2 {
+    font-size: 1.5em;
+}
+
+#leaderboard {
+    margin-top: 20px;
+}
+
+#leaderboard h2 {
+    font-size: 1.5em;
+}
+
+#leaderboardList {
+    list-style-type: none;
+    padding: 0;
+}
+
+#leaderboardList li {
+    margin: 5px 0;
+    padding: 5px;
+    border: 1px solid #ddd;
+}
